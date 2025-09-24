@@ -3,6 +3,8 @@ import FuelSection from '@/components/FuelSection'
 import ConvenienceSection from '@/components/ConvenienceSection'
 import AboutSection from '@/components/AboutSection'
 import Footer from '@/components/Footer'
+import FloatingPriceTicker from '@/components/FloatingPriceTicker'
+import PriceAlertSystem from '@/components/PriceAlertSystem'
 import { Toaster } from '@/components/ui/sonner'
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
             <ConvenienceSection />
             <AboutSection />
             <Footer />
+            <FloatingPriceTicker />
+            <PriceAlertSystem />
             <Toaster />
         </div>
     )
