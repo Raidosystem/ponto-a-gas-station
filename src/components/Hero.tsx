@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { MapPin, Clock, Phone } from '@phosphor-icons/react'
+import grupoAguetoniLogo from '@/assets/images/grupo-aguetoni-logo.svg'
 
 export default function Hero() {
     const openWhatsApp = () => {
@@ -9,13 +10,41 @@ export default function Hero() {
     }
 
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex flex-col overflow-hidden">
             {/* Background with gradient overlay */}
             <div className="absolute inset-0 gradient-bg opacity-90" />
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=2070')] bg-cover bg-center opacity-20" />
             
-            {/* Content */}
-            <div className="relative z-10 container mx-auto px-6 text-center text-white">
+            {/* Header with Logo */}
+            <header className="relative z-20 w-full">
+                <div className="container mx-auto px-6 py-6">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-4">
+                            <img 
+                                src={grupoAguetoniLogo} 
+                                alt="Grupo Aguetoni" 
+                                className="h-12 w-auto"
+                            />
+                        </div>
+                        <nav className="hidden md:flex items-center space-x-8 text-white">
+                            <a href="#combustiveis" className="hover:text-white/80 transition-colors font-medium">Combustíveis</a>
+                            <a href="#conveniencia" className="hover:text-white/80 transition-colors font-medium">Conveniência</a>
+                            <a href="#sobre" className="hover:text-white/80 transition-colors font-medium">Sobre</a>
+                            <Button 
+                                variant="outline" 
+                                className="border-white text-white hover:bg-white hover:text-primary"
+                                onClick={openWhatsApp}
+                            >
+                                <Phone className="mr-2" size={16} weight="bold" />
+                                Contato
+                            </Button>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            
+            {/* Main Content */}
+            <div className="relative z-10 container mx-auto px-6 text-center text-white flex-1 flex items-center justify-center">
                 <div className="max-w-4xl mx-auto">
                     <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tight">
                         PONTO A

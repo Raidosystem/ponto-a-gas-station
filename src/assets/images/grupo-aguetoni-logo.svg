@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orange circular background -->
+  <circle cx="60" cy="40" r="35" fill="#FF6600"/>
+  
+  <!-- White "A" shape inside circle -->
+  <path d="M45 55 L60 25 L75 55 L70 55 L67 48 L53 48 L50 55 Z M56 38 L64 38 L60 30 Z" fill="white"/>
+  
+  <!-- Text "GRUPO" -->
+  <text x="10" y="85" font-family="Arial Black, sans-serif" font-size="16" font-weight="900" fill="#CC0000">GRUPO</text>
+  
+  <!-- Text "AGUETONI" -->
+  <text x="10" y="105" font-family="Arial Black, sans-serif" font-size="24" font-weight="900" fill="#CC0000">AGUETONI</text>
+</svg>
