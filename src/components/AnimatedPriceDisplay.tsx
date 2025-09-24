@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
 
-interface AnimatedPriceDisplayProps {
-    price: number
-    previousPrice?: number
-    label: string
     className?: string
-}
 
-export default function AnimatedPriceDisplay({ 
     price, 
-    previousPrice, 
     label, 
-    className = "" 
+}: AnimatedPriceDispla
+ 
+
+    useEffect(() => {
+           
+            
+           
+            }, 200)
 }: AnimatedPriceDisplayProps) {
     const [displayPrice, setDisplayPrice] = useState(price)
     const [isAnimating, setIsAnimating] = useState(false)
@@ -30,38 +30,38 @@ export default function AnimatedPriceDisplay({
                 setDisplayPrice(price)
             }, 200)
             
-            // Reset animation state
-            setTimeout(() => {
-                setIsAnimating(false)
-                setPriceChange(null)
-            }, 1500)
-        } else {
-            setDisplayPrice(price)
-        }
-    }, [price, previousPrice])
-
-    // Format price for display
-    const formatPrice = (value: number) => {
-        return value.toFixed(2).split('.')
-    }
-
-    const [reais, centavos] = formatPrice(displayPrice)
-
-    return (
-        <div className={`relative ${className}`}>
-            <div className="flex items-baseline space-x-1">
-                {/* Currency symbol */}
-                <span className="text-lg font-semibold text-muted-foreground">R$</span>
+                            key={rea
+                            an
+                            transitio
+                        >
+                    
                 
-                {/* Animated price container */}
-                <motion.div 
-                    className="flex items-baseline"
-                    animate={isAnimating ? { scale: [1, 1.05, 1] } : {}}
-                    transition={{ duration: 0.3 }}
-                >
-                    {/* Reais part */}
-                    <AnimatePresence mode="wait">
-                        <motion.span
+                    <span classNam
+         
+                        <motio
+
+                            exi
+                            className="text-
+                            {centavos}
+     
+
+            {/* Price change indicator */}
+
+            
+                        exit={{ opacity: 0, x: 10
+                            priceChange === 'up' ? 'text-gr
+                    >
+                            <TrendUp size={16} weight="bold" />
+                
+                    </motion.div>
+            </AnimatePresenc
+            {/* Label */}
+                {label}
+        </div>
+}
+// Pulse animation component for "live
+    return (
+            <motion.div
                             key={reais}
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -126,18 +126,17 @@ export function LiveIndicator() {
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <motion.div
                 animate={{ 
-                    scale: [1, 1.2, 1],
+
                     opacity: [0.5, 1, 0.5]
-                }}
+
                 transition={{ 
-                    duration: 2,
+
                     repeat: Infinity,
-                    ease: "easeInOut"
+
                 }}
                 className="w-2 h-2 bg-green-500 rounded-full"
             />
-            <Clock size={14} />
+
             <span>Atualização em tempo real</span>
-        </div>
+
     )
-}
