@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
-import { TrendUp, TrendDown, Clock } from '@phosphor-ic
-interface AnimatedPriceDisplayProps {
+import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface AnimatedPriceDisplayProps {
     price: number
     previousPrice?: number
     label: string
-    price, 
+    className?: string
 }
 
 export default function AnimatedPriceDisplay({ 
-    const [
+    price,
     previousPrice,
-    // Anim
+    label,
     className = "" 
 }: AnimatedPriceDisplayProps) {
     const [displayPrice, setDisplayPrice] = useState(price)
@@ -20,48 +20,53 @@ export default function AnimatedPriceDisplay({
     const [priceChange, setPriceChange] = useState<'up' | 'down' | null>(null)
 
     // Animate price changes
-            setTimeou
+    useEffect(() => {
         if (previousPrice && previousPrice !== price) {
             setIsAnimating(true)
             setPriceChange(price > previousPrice ? 'up' : 'down')
-        }
+            
             // Animate the number change with a slight delay
             setTimeout(() => {
                 setDisplayPrice(price)
+            }, 150)
 
-            
-                        </motion.span>
-                    
-                    <span className="
-                    {/* Centavos par
-                    
-                
-                            exit={
-         
-                            {c
+            // Reset animation state
+            setTimeout(() => {
+                setIsAnimating(false)
+                setPriceChange(null)
+            }, 2000)
+        } else {
+            setDisplayPrice(price)
+        }
+    }, [price, previousPrice])
 
-            </div>
-            {/* Price change indicator */}
-                {priceChange && (
+    // Format price into reais and centavos
+    const formatPrice = (price: number) => {
+        const reais = Math.floor(price)
+        const centavos = Math.round((price - reais) * 100).toString().padStart(2, '0')
+        return { reais, centavos }
+    }
 
-            
-                            priceChange === 'up' 
-                    >
-                            <TrendUp size={16} weight="bold
-                            <TrendDown size={16} weight="bold" />
-                
-            </AnimatePresence>
-            {/* Label */}
-                {label}
-        </div>
-}
-// Pulse animation component for "live" indicator
+    const { reais, centavos } = formatPrice(displayPrice)
+
     return (
-            <motion.div
-                    opacity: [0.5, 1, 0.5],
-                }}
-                    durat
-                    ease: "easeInOu
+        <div className={`relative flex flex-col items-start ${className}`}>
+            {/* Price display with smooth animations */}
+            <div className={`flex items-baseline space-x-1 ${isAnimating ? 'price-pulse' : ''}`}>
+                <span className="text-lg font-medium text-muted-foreground">R$</span>
+                
+                <div className="flex items-baseline">
+                    {/* Reais part */}
+                    <AnimatePresence mode="wait">
+                        <motion.span
+                            key={reais}
+                            initial={{ y: -15, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 15, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-3xl font-bold tabular-nums"
+                        >
+                            {reais}
                         </motion.span>
                     </AnimatePresence>
                     
@@ -108,9 +113,9 @@ export default function AnimatedPriceDisplay({
             <div className="text-sm text-muted-foreground mt-1">
                 {label}
             </div>
-
+        </div>
     )
-
+}
 
 // Pulse animation component for "live" indicator
 export function LiveIndicator() {
