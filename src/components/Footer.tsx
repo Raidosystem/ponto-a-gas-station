@@ -1,7 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { MapPin, Clock, Phone, InstagramLogo, FacebookLogo, WhatsappLogo } from '@phosphor-icons/react'
+import { useSmoothScroll } from '@/hooks/useScrollAnimation'
+import { motion } from 'framer-motion'
 
 export default function Footer() {
+    const { scrollToSection } = useSmoothScroll()
+    
     const openWhatsApp = () => {
         const message = "Olá! Vim através do site do PONTO A e gostaria de mais informações 😊"
         const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(message)}`
@@ -90,19 +94,19 @@ export default function Footer() {
                         <h4 className="font-semibold text-xl mb-4">Links Rápidos</h4>
                         <div className="space-y-2">
                             <button 
-                                onClick={() => document.getElementById('combustiveis')?.scrollIntoView({ behavior: 'smooth' })}
+                                onClick={() => scrollToSection('combustiveis', 80)}
                                 className="block text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                             >
                                 Combustíveis
                             </button>
                             <button 
-                                onClick={() => document.getElementById('conveniencia')?.scrollIntoView({ behavior: 'smooth' })}
+                                onClick={() => scrollToSection('conveniencia', 80)}
                                 className="block text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                             >
                                 Conveniência
                             </button>
                             <button 
-                                onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })}
+                                onClick={() => scrollToSection('sobre', 80)}
                                 className="block text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                             >
                                 Sobre Nós
@@ -134,16 +138,39 @@ export default function Footer() {
                 </div>
             </div>
 
-            {/* WhatsApp Float Button */}
-            <div className="fixed bottom-6 right-6 z-50">
-                <Button
-                    size="lg"
-                    className="rounded-full w-14 h-14 bg-green-500 hover:bg-green-600 shadow-2xl animate-pulse hover:animate-none"
-                    onClick={openWhatsApp}
+            {/* WhatsApp Float Button with enhanced animation */}
+            <motion.div 
+                className="fixed bottom-6 right-6 z-50"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 2, duration: 0.5, type: "spring" }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+            >
+                <motion.div
+                    animate={{ 
+                        y: [0, -5, 0],
+                        boxShadow: [
+                            "0 10px 30px rgba(34, 197, 94, 0.3)",
+                            "0 15px 40px rgba(34, 197, 94, 0.5)",
+                            "0 10px 30px rgba(34, 197, 94, 0.3)"
+                        ]
+                    }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
                 >
-                    <WhatsappLogo size={28} weight="bold" />
-                </Button>
-            </div>
+                    <Button
+                        size="lg"
+                        className="rounded-full w-14 h-14 bg-green-500 hover:bg-green-600 shadow-2xl"
+                        onClick={openWhatsApp}
+                    >
+                        <WhatsappLogo size={28} weight="bold" />
+                    </Button>
+                </motion.div>
+            </motion.div>
         </footer>
     )
 }

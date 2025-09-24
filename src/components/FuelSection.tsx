@@ -4,11 +4,14 @@ import { Card } from '@/components/ui/card'
 import { Drop, Lightning, Car, Phone, ArrowClockwise } from '@phosphor-icons/react'
 import AnimatedPriceDisplay, { LiveIndicator } from '@/components/AnimatedPriceDisplay'
 import FuelPriceChart from '@/components/FuelPriceChart'
+import AnimatedSection from '@/components/AnimatedSection'
 import { useRealTimeFuelPrices } from '@/hooks/useRealTimeFuelPrices'
+import { useStaggeredAnimation } from '@/hooks/useScrollAnimation'
 import { motion } from 'framer-motion'
 
 export default function FuelSection() {
     const { fuelPrices, isLoading, updateFuelPrices, lastUpdateTime } = useRealTimeFuelPrices()
+    const cardAnimations = useStaggeredAnimation(4, 0.15)
 
     // Icon mapping
     const iconMap = {
@@ -33,9 +36,15 @@ export default function FuelSection() {
     }
 
     return (
-        <section id="combustiveis" className="py-20 bg-muted/30">
+        <AnimatedSection id="combustiveis" className="py-20 bg-muted/30">
             <div className="container mx-auto px-6">
-                <div className="text-center mb-16">
+                <motion.div 
+                    className="text-center mb-16"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.8 }}
+                >
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">
                         Combustíveis
                     </h2>
@@ -68,24 +77,41 @@ export default function FuelSection() {
                             </span>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {fuelPrices?.map((fuel) => {
+                <motion.div 
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                    {fuelPrices?.map((fuel, index) => {
                         const IconComponent = iconMap[fuel.id as keyof typeof iconMap] || Car
+                        const animation = cardAnimations[index] || cardAnimations[0]
+                        
                         return (
                             <motion.div
                                 key={fuel.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
+                                initial={animation.initial}
+                                whileInView={animation.animate}
+                                viewport={{ once: true, amount: 0.3 }}
+                                transition={animation.transition}
+                                whileHover={{ 
+                                    y: -8,
+                                    transition: { duration: 0.2 }
+                                }}
                             >
                                 <Card className="p-0 overflow-hidden hover-lift bg-card/80 backdrop-blur-sm">
                                     <div className="p-6">
                                         <div className="flex items-center justify-between mb-4">
-                                            <div className="p-3 rounded-xl bg-primary/10">
+                                            <motion.div 
+                                                className="p-3 rounded-xl bg-primary/10"
+                                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
                                                 <IconComponent size={32} className="text-primary" weight="bold" />
-                                            </div>
+                                            </motion.div>
                                             {fuel.badge && (
                                                 <Badge variant="secondary" className="bg-accent text-accent-foreground">
                                                     {fuel.badge}
@@ -126,31 +152,50 @@ export default function FuelSection() {
                             </motion.div>
                         )
                     })}
-                </div>
+                </motion.div>
 
-                <div className="text-center mt-12 mb-8">
+                <motion.div 
+                    className="text-center mt-12 mb-8"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                >
                     <p className="text-muted-foreground text-sm">
                         Preços sujeitos a alteração. Confirme valores pelo WhatsApp.
                     </p>
-                </div>
+                </motion.div>
 
-                {/* Price History Charts */}
-                <div className="space-y-4">
+                {/* Price History Charts with staggered animation */}
+                <motion.div 
+                    className="space-y-4"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                >
                     <h3 className="text-2xl font-bold text-center mb-6">Histórico de Preços</h3>
-                    {fuelPrices?.map((fuel) => (
-                        <FuelPriceChart
+                    {fuelPrices?.map((fuel, index) => (
+                        <motion.div
                             key={fuel.id}
-                            fuelId={fuel.id}
-                            fuelName={fuel.name}
-                            currentPrice={fuel.price}
-                            color={fuel.id === 'gasolina-comum' ? 'hsl(var(--primary))' : 
-                                   fuel.id === 'gasolina-aditivada' ? 'hsl(var(--secondary))' :
-                                   fuel.id === 'etanol' ? 'hsl(var(--accent))' : 
-                                   'hsl(var(--muted-foreground))'}
-                        />
+                            initial={{ opacity: 0, x: -40 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, amount: 0.3 }}
+                            transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                        >
+                            <FuelPriceChart
+                                fuelId={fuel.id}
+                                fuelName={fuel.name}
+                                currentPrice={fuel.price}
+                                color={fuel.id === 'gasolina-comum' ? 'hsl(var(--primary))' : 
+                                       fuel.id === 'gasolina-aditivada' ? 'hsl(var(--secondary))' :
+                                       fuel.id === 'etanol' ? 'hsl(var(--accent))' : 
+                                       'hsl(var(--muted-foreground))'}
+                            />
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
-        </section>
+        </AnimatedSection>
     )
 }
