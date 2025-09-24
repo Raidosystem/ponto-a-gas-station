@@ -1,8 +1,8 @@
+import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Drop, Lightning, Car, Phone } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
 
 interface FuelPrice {
     id: string
@@ -16,7 +16,7 @@ interface FuelPrice {
 }
 
 export default function FuelSection() {
-    const [fuelPrices] = useKV<FuelPrice[]>('fuel-prices', [
+    const [fuelPrices] = useState<FuelPrice[]>([
         {
             id: 'gasolina-comum',
             name: 'Gasolina Comum',

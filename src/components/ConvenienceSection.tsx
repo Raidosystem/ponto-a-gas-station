@@ -1,10 +1,9 @@
+import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Coffee, Hamburger, IceCream, Pill, Phone, ShoppingCart } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import { useState } from 'react'
 
 interface Product {
     id: string
@@ -20,7 +19,7 @@ interface Product {
 export default function ConvenienceSection() {
     const [cart, setCart] = useState<Product[]>([])
     
-    const [products] = useKV<Product[]>('convenience-products', [
+    const [products] = useState<Product[]>([
         // Bebidas
         {
             id: 'cafe-expresso',
