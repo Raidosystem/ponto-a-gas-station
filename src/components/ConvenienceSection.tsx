@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { motion } from 'framer-motion'
 import { Phone, ShoppingCart, X } from '@phosphor-icons/react'
-import AnimatedSection from '@/components/AnimatedSection'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { motion } from 'framer-motion'
+import AnimatedSection from './AnimatedSection'
 
 interface Product {
     id: string
@@ -20,54 +20,76 @@ interface Product {
 
 export default function ConvenienceSection() {
     const [cart, setCart] = useState<Product[]>([])
-    
-    const [products] = useState<Product[]>([
+
+    const products: Product[] = [
         // Bebidas
         {
-            id: 'cafe-expresso',
-            name: 'Café Expresso Premium',
-            description: 'Café artesanal feito na hora',
+            id: 'coca-cola',
+            name: 'Coca-Cola 350ml',
+            description: 'Refrigerante gelado',
             price: 4.50,
             category: 'bebidas',
             available: true,
             popular: true
         },
         {
-            id: 'agua-500ml',
+            id: 'agua-mineral',
             name: 'Água Mineral 500ml',
-            description: 'Água natural gelada',
+            description: 'Água mineral natural',
             price: 2.50,
             category: 'bebidas',
             available: true
         },
         {
-            id: 'energetico',
-            name: 'Energético Premium',
-            description: 'Para manter a energia na estrada',
-            price: 8.00,
+            id: 'cafe-expresso',
+            name: 'Café Expresso',
+            description: 'Café fresco e aromático',
+            price: 3.50,
             category: 'bebidas',
             available: true
         },
-        
+        {
+            id: 'suco-laranja',
+            name: 'Suco de Laranja',
+            description: 'Natural da fruta',
+            price: 6.00,
+            category: 'bebidas',
+            available: true
+        },
         // Lanches
         {
-            id: 'sanduiche-natural',
-            name: 'Sanduíche Natural',
-            description: 'Frango, salada e maionese caseira',
-            price: 12.90,
+            id: 'pao-queijo',
+            name: 'Pão de Queijo',
+            description: 'Fresquinho e quentinho',
+            price: 8.00,
+            category: 'lanches',
+            available: true
+        },
+        {
+            id: 'coxinha',
+            name: 'Coxinha de Frango',
+            description: 'Tradicional salgadinho',
+            price: 5.50,
             category: 'lanches',
             available: true,
             popular: true
         },
         {
-            id: 'pao-de-acucar',
-            name: 'Pão de Açúcar',
-            description: 'Pão francês fresquinho',
-            price: 4.90,
+            id: 'sanduiche-natural',
+            name: 'Sanduíche Natural',
+            description: 'Com peito de peru e queijo',
+            price: 12.90,
             category: 'lanches',
             available: true
         },
-        
+        {
+            id: 'pao-de-acucar',
+            name: 'Pão de Açúcar',
+            description: 'Doce tradicional mineiro',
+            price: 4.00,
+            category: 'lanches',
+            available: true
+        },
         // Conveniência
         {
             id: 'carregador-celular',
@@ -85,7 +107,7 @@ export default function ConvenienceSection() {
             category: 'conveniencia',
             available: true
         }
-    ])
+    ]
 
     const categories = [
         { id: 'bebidas', label: 'Bebidas' },
@@ -142,134 +164,149 @@ export default function ConvenienceSection() {
                     </p>
                 </motion.div>
 
-                {/* Cart summary */}
-                {cart.length > 0 && (
-                    <motion.div 
-                        className="mb-8 p-4 bg-card rounded-xl border glass-card"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <h3 className="font-semibold mb-3 flex items-center gap-2">
-                            <ShoppingCart size={20} className="text-primary" />
-                            Carrinho ({cart.length} itens)
-                        </h3>
-                        <div className="space-y-2 mb-4">
-                            {cart.map((item, index) => (
-                                <div key={`${item.id}-${index}`} className="flex justify-between items-center text-sm">
-                                    <span>{item.name}</span>
-                                    <div className="flex items-center gap-2">
-                                        <span>R$ {item.price.toFixed(2)}</span>
-                                        <Button 
-                                            size="sm"
-                                            variant="ghost"
-                                            onClick={() => removeFromCart(item.id)}
-                                            className="h-6 w-6 p-0"
-                                        >
-                                            <X size={12} />
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="flex justify-between items-center pt-3 border-t">
-                            <span className="font-semibold">Total: R$ {getCartTotal().toFixed(2)}</span>
-                            <Button onClick={openCartWhatsApp} className="bg-secondary hover:bg-secondary/90">
-                                <Phone size={16} className="mr-2" />
-                                Finalizar Pedido
-                            </Button>
-                        </div>
-                    </motion.div>
-                )}
+                <div className="grid lg:grid-cols-4 gap-8">
+                    <div className="lg:col-span-3">
+                        <Tabs defaultValue="bebidas" className="w-full">
+                            <TabsList className="grid w-full grid-cols-3 mb-8">
+                                {categories.map(category => (
+                                    <TabsTrigger 
+                                        key={category.id} 
+                                        value={category.id}
+                                        className="text-sm font-medium"
+                                    >
+                                        {category.label}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true }}
-                >
-                    <Tabs defaultValue="bebidas" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 mb-8">
-                            {categories.map((category) => (
-                                <TabsTrigger key={category.id} value={category.id}>
-                                    {category.label}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
+                            {categories.map(category => (
+                                <TabsContent key={category.id} value={category.id}>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {getProductsByCategory(category.id).map((product, index) => (
+                                            <motion.div
+                                                key={product.id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                                viewport={{ once: true }}
+                                            >
+                                                <Card className="p-6 hover-lift glass-card group cursor-pointer">
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                                                                    {product.name}
+                                                                </h3>
+                                                                {product.popular && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        Popular
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-muted-foreground text-sm mb-3">
+                                                                {product.description}
+                                                            </p>
+                                                            <p className="text-2xl font-bold text-primary tabular-nums">
+                                                                R$ {product.price.toFixed(2)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
 
-                        {categories.map((category) => (
-                            <TabsContent key={category.id} value={category.id}>
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                                >
-                                    {getProductsByCategory(category.id).map((product) => (
-                                        <Card key={product.id} className="overflow-hidden hover-lift bg-card/80 backdrop-blur-sm">
-                                            <div className="p-6">
-                                                <div className="flex justify-between items-start mb-3">
-                                                    <div className="flex-1">
-                                                        <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
-                                                        {product.popular && (
-                                                            <Badge className="mb-2 bg-accent text-accent-foreground">Popular</Badge>
-                                                        )}
-                                                    </div>
-                                                    <div className={`px-2 py-1 rounded-full text-xs ${
-                                                        product.available 
-                                                            ? 'bg-green-100 text-green-700' 
-                                                            : 'bg-red-100 text-red-700'
-                                                    }`}>
-                                                        {product.available ? 'Disponível' : 'Indisponível'}
-                                                    </div>
-                                                </div>
-
-                                                <p className="text-muted-foreground text-sm mb-4">{product.description}</p>
-                                                
-                                                <div className="flex items-center justify-between">
-                                                    <div className="text-2xl font-bold text-primary">
-                                                        R$ {product.price.toFixed(2)}
-                                                    </div>
                                                     <div className="flex gap-2">
                                                         <Button 
+                                                            onClick={() => openProductWhatsApp(product)}
+                                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() => addToCart(product)}
-                                                            disabled={!product.available}
                                                         >
-                                                            +
+                                                            <Phone className="mr-2 h-4 w-4" />
+                                                            WhatsApp
                                                         </Button>
                                                         <Button 
+                                                            onClick={() => addToCart(product)}
+                                                            variant="outline"
                                                             size="sm"
-                                                            className="bg-secondary hover:bg-secondary/90"
-                                                            onClick={() => openProductWhatsApp(product)}
-                                                            disabled={!product.available}
+                                                            className="hover:bg-primary hover:text-primary-foreground"
                                                         >
-                                                            <Phone size={14} />
+                                                            <ShoppingCart className="h-4 w-4" />
                                                         </Button>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </Card>
-                                    ))}
-                                </motion.div>
-                            </TabsContent>
-                        ))}
-                    </Tabs>
+                                                </Card>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </TabsContent>
+                            ))}
+                        </Tabs>
+                    </div>
 
-                    <motion.div 
-                        className="text-center mt-12"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                        viewport={{ once: true }}
-                    >
-                        <p className="text-muted-foreground text-sm">
-                            Produtos e preços sujeitos a disponibilidade. Confirme pelo WhatsApp.
-                        </p>
-                    </motion.div>
-                </motion.div>
+                    {/* Carrinho lateral */}
+                    <div className="lg:col-span-1">
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="sticky top-24"
+                        >
+                            <Card className="p-6 glass-card">
+                                <div className="flex items-center gap-2 mb-6">
+                                    <ShoppingCart className="h-5 w-5 text-primary" />
+                                    <h3 className="font-semibold text-lg">Carrinho</h3>
+                                    {cart.length > 0 && (
+                                        <Badge variant="secondary" className="ml-auto">
+                                            {cart.length}
+                                        </Badge>
+                                    )}
+                                </div>
+
+                                {cart.length === 0 ? (
+                                    <p className="text-muted-foreground text-center py-8">
+                                        Seu carrinho está vazio
+                                    </p>
+                                ) : (
+                                    <>
+                                        <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
+                                            {cart.map((item, index) => (
+                                                <div key={`${item.id}-${index}`} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-medium text-sm truncate">{item.name}</p>
+                                                        <p className="text-primary font-semibold text-sm tabular-nums">
+                                                            R$ {item.price.toFixed(2)}
+                                                        </p>
+                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => removeFromCart(item.id)}
+                                                        className="ml-2 h-8 w-8 p-0 hover:bg-destructive/20 hover:text-destructive"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="border-t pt-4">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <span className="font-semibold">Total:</span>
+                                                <span className="text-xl font-bold text-primary tabular-nums">
+                                                    R$ {getCartTotal().toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <Button 
+                                                onClick={openCartWhatsApp}
+                                                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                                            >
+                                                <Phone className="mr-2 h-4 w-4" />
+                                                Finalizar no WhatsApp
+                                            </Button>
+                                        </div>
+                                    </>
+                                )}
+                            </Card>
+                        </motion.div>
+                    </div>
+                </div>
             </div>
         </AnimatedSection>
     )
