@@ -11,7 +11,7 @@ export interface FuelPrice {
     icon: any
     description: string
     badge?: string
-    lastUpdated: Date
+    lastUpdated: Date | string
 }
 
 // Base prices for fuel types
@@ -148,8 +148,10 @@ export function useRealTimeFuelPrices() {
         if (!fuelPrices || fuelPrices.length === 0) return null
         
         const mostRecent = fuelPrices.reduce((latest, fuel) => {
-            return fuel.lastUpdated > latest ? fuel.lastUpdated : latest
-        }, fuelPrices[0].lastUpdated)
+            const fuelDate = fuel.lastUpdated instanceof Date ? fuel.lastUpdated : new Date(fuel.lastUpdated)
+            const latestDate = latest instanceof Date ? latest : new Date(latest)
+            return fuelDate > latestDate ? fuelDate : latestDate
+        }, fuelPrices[0].lastUpdated instanceof Date ? fuelPrices[0].lastUpdated : new Date(fuelPrices[0].lastUpdated))
         
         return mostRecent
     }

@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
 
+interface AnimatedPriceDisplayProps {
+    price: number
+    previousPrice?: number
+    label: string
     className?: string
+}
 
+export default function AnimatedPriceDisplay({ 
     price, 
+    previousPrice,
     label, 
-}: AnimatedPriceDispla
- 
-
-    useEffect(() => {
-           
-            
-           
-            }, 200)
+    className = "" 
 }: AnimatedPriceDisplayProps) {
     const [displayPrice, setDisplayPrice] = useState(price)
     const [isAnimating, setIsAnimating] = useState(false)
@@ -30,38 +30,30 @@ import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
                 setDisplayPrice(price)
             }, 200)
             
-                            key={rea
-                            an
-                            transitio
-                        >
-                    
-                
-                    <span classNam
-         
-                        <motio
+            // Clear animation state after animation completes
+            setTimeout(() => {
+                setIsAnimating(false)
+                setPriceChange(null)
+            }, 2000)
+        } else {
+            setDisplayPrice(price)
+        }
+    }, [price, previousPrice])
 
-                            exi
-                            className="text-
-                            {centavos}
-     
+    // Split price into reais and centavos for individual animations
+    const priceString = displayPrice.toFixed(2)
+    const [reais, centavos] = priceString.split('.')
 
-            {/* Price change indicator */}
-
-            
-                        exit={{ opacity: 0, x: 10
-                            priceChange === 'up' ? 'text-gr
-                    >
-                            <TrendUp size={16} weight="bold" />
-                
-                    </motion.div>
-            </AnimatePresenc
-            {/* Label */}
-                {label}
-        </div>
-}
-// Pulse animation component for "live
     return (
-            <motion.div
+        <div className={`relative ${className}`}>
+            {/* Main price display */}
+            <div className="flex items-baseline space-x-1">
+                <span className="text-sm font-medium text-muted-foreground">R$</span>
+                
+                {/* Reais part */}
+                <div className="flex items-baseline">
+                    <AnimatePresence mode="wait">
+                        <motion.span
                             key={reais}
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -89,7 +81,7 @@ import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
                             {centavos}
                         </motion.span>
                     </AnimatePresence>
-                </motion.div>
+                </div>
             </div>
 
             {/* Price change indicator */}
@@ -100,7 +92,7 @@ import { TrendUp, TrendDown, Clock } from '@phosphor-icons/react'
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 10 }}
                         className={`absolute -right-8 top-0 flex items-center space-x-1 ${
-                            priceChange === 'up' ? 'text-green-600' : 'text-red-600'
+                            priceChange === 'up' ? 'text-red-600' : 'text-green-600'
                         }`}
                     >
                         {priceChange === 'up' ? (
@@ -126,17 +118,18 @@ export function LiveIndicator() {
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <motion.div
                 animate={{ 
-
-                    opacity: [0.5, 1, 0.5]
-
+                    opacity: [0.5, 1, 0.5],
+                    scale: [1, 1.2, 1]
+                }}
                 transition={{ 
-
+                    duration: 2,
                     repeat: Infinity,
-
+                    ease: "easeInOut"
                 }}
                 className="w-2 h-2 bg-green-500 rounded-full"
             />
-
+            <Clock size={16} className="mr-1" />
             <span>Atualização em tempo real</span>
-
+        </div>
     )
+}
